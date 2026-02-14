@@ -1,4 +1,4 @@
-const API = "http://localhost:3001";
+const API = "https://vera-backend-92jt.onrender.com";
 
 export async function getServicos() {
   const r = await fetch(API + "/servicos");
