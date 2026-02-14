@@ -69,18 +69,19 @@ app.post("/triagem", (req, res) => {
 /* ================= HORÁRIOS OCUPADOS ================= */
 
 app.get("/horarios-ocupados", (req, res) => {
-  const { data } = req.query;
+  const { data, servico } = req.query;
 
-  if (!data) {
+  if (!data || !servico) {
     return res.json([]);
   }
 
   const rows = db.prepare(
-    "SELECT hora FROM reagendamentos WHERE data = ?"
-  ).all(data);
+    "SELECT hora FROM reagendamentos WHERE data=? AND servico=?"
+  ).all(data, servico);
 
   res.json(rows.map(r => r.hora));
 });
+
 
 /* ================= REAGENDAR ================= */
 
@@ -108,21 +109,11 @@ app.post("/reagendar", (req, res) => {
   });
 });
 
-/* ================= LISTAR AGENDAMENTOS ================= */
-
-app.get("/horarios-ocupados", (req, res) => {
-  const { data, servico } = req.query;
-
-  const rows = db.prepare(
-    "SELECT hora FROM reagendamentos WHERE data=? AND servico=?"
-  ).all(data, servico);
-
-  res.json(rows.map(r => r.hora));
-});
-
-
 /* ================= START ================= */
 
-app.listen(3001, () => {
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
   console.log("✅ Vera backend ativo com agenda persistente");
 });
+
